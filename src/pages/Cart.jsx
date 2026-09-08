@@ -7,7 +7,7 @@ import { openWhatsApp } from "../lib/whatsapp";
 const initialDetails = { name: "", phone: "", address: "", note: "" };
 
 export default function Cart() {
-  const { cart, total, changeQuantity } = useCart();
+  const { cart, total, changeQuantity, removeItem } = useCart();
   const [details, setDetails] = useState(initialDetails);
 
   function updateDetails(event) {
@@ -92,24 +92,35 @@ export default function Cart() {
                         {formatPrice(item.price * item.quantity)}
                       </p>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center border border-[#2b241e]/25 text-xs">
+                    <div className="flex flex-wrap items-center justify-between gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center border border-[#2b241e]/25 text-xs">
+                          <button
+                            type="button"
+                            onClick={() => changeQuantity(item.id, -1)}
+                            className="h-8 w-8 transition hover:bg-[#eadbc6]"
+                            aria-label={`Decrease ${item.name} quantity`}
+                          >
+                            −
+                          </button>
+                          <span className="w-8 text-center">
+                            {item.quantity}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => changeQuantity(item.id, 1)}
+                            className="h-8 w-8 transition hover:bg-[#eadbc6]"
+                            aria-label={`Increase ${item.name} quantity`}
+                          >
+                            +
+                          </button>
+                        </div>
                         <button
                           type="button"
-                          onClick={() => changeQuantity(item.id, -1)}
-                          className="h-8 w-8 transition hover:bg-[#eadbc6]"
-                          aria-label={`Decrease ${item.name} quantity`}
+                          onClick={() => removeItem(item.id)}
+                          className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#a75d4c] underline underline-offset-4 transition hover:text-[#7e352d]"
                         >
-                          −
-                        </button>
-                        <span className="w-8 text-center">{item.quantity}</span>
-                        <button
-                          type="button"
-                          onClick={() => changeQuantity(item.id, 1)}
-                          className="h-8 w-8 transition hover:bg-[#eadbc6]"
-                          aria-label={`Increase ${item.name} quantity`}
-                        >
-                          +
+                          Remove
                         </button>
                       </div>
                       <span className="text-xs opacity-50">

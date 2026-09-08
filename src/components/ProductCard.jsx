@@ -33,9 +33,20 @@ export default function ProductCard({ product }) {
         </div>
         <button
           onClick={() => add(product)}
-          className="border-b border-[#2b241e] pb-1 text-[9px] font-bold uppercase tracking-[0.12em] transition hover:border-[#c96f4a] hover:text-[#c96f4a]"
+          aria-label={`Add ${product.name} to cart`}
+          title="Add to cart"
+          className="group/cart flex shrink-0 items-center gap-2 rounded-full border border-[#285447] bg-[#285447] px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-[#fff7ed] transition hover:border-[#c96f4a] hover:bg-[#c96f4a]"
         >
-          Add +
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            className="h-5 w-5 fill-none stroke-current stroke-[1.7]"
+          >
+            <path d="M5 8.5h14l-1 11H6l-1-11Z" />
+            <path d="M9 9V6.5a3 3 0 0 1 6 0V9" />
+            <path d="M12 12v4M10 14h4" />
+          </svg>
+          <span>Add to cart</span>
         </button>
       </div>
     </article>

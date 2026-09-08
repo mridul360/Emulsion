@@ -1,8 +1,24 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CartContext } from "./cart-context";
 
+const CART_STORAGE_KEY = "emulsion-cart";
+
+function loadCart() {
+  try {
+    const savedCart = window.localStorage.getItem(CART_STORAGE_KEY);
+    return savedCart ? JSON.parse(savedCart) : [];
+  } catch {
+    return [];
+  }
+}
+
 export function CartProvider({ children }) {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(loadCart);
+
+  useEffect(() => {
+    window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+  }, [cart]);
+
   const value = useMemo(
     () => ({
       cart,
@@ -30,6 +46,9 @@ export function CartProvider({ children }) {
             )
             .filter((item) => item.quantity > 0),
         );
+      },
+      removeItem(id) {
+        setCart((current) => current.filter((item) => item.id !== id));
       },
     }),
     [cart],

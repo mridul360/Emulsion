@@ -41,7 +41,7 @@ export default function Contact() {
             tomorrow morning? We would love to hear from you.
           </p>
           <a
-            href="https://wa.me/15551234567"
+            href="https://wa.me/8801972086115"
             target="_blank"
             rel="noreferrer"
             className="mt-8 inline-flex bg-[#25d366] px-5 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-white transition hover:bg-[#1daf55]"

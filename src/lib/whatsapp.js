@@ -1,6 +1,6 @@
 import { formatPrice } from "./currency";
 
-const WHATSAPP_NUMBER = "15551234567";
+const WHATSAPP_NUMBER = "8801972086115";
 
 export function openWhatsApp(items, customer = {}) {
   const total = items.reduce(

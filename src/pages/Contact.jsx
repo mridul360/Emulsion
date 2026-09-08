@@ -33,7 +33,7 @@ export default function Contact() {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#c96f4a]">
             Contact us
           </p>
-          <h1 className="mt-4 max-w-2xl font-serif text-6xl leading-[0.9] tracking-tighter md:text-8xl">
+          <h1 className="mt-4 max-w-2xl font-serif text-5xl leading-[0.94] tracking-tighter sm:text-6xl md:text-8xl">
             Let&apos;s make something <em>worth sharing.</em>
           </h1>
           <p className="mt-7 max-w-md text-base leading-7 opacity-70">
@@ -72,7 +72,7 @@ export default function Contact() {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#c96f4a]">
             Send a note
           </p>
-          <h2 className="mt-4 font-serif text-5xl tracking-tight">
+            <h2 className="mt-4 font-serif text-4xl tracking-tight sm:text-5xl">
             Tell us what you&apos;re planning.
           </h2>
         </div>

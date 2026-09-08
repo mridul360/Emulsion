@@ -90,7 +90,7 @@ export default function Admin() {
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#c96f4a]">
               Emulsion bakery / Admin
             </p>
-            <h1 className="mt-3 font-serif text-6xl tracking-tight md:text-8xl">
+            <h1 className="mt-3 font-serif text-5xl tracking-tight sm:text-6xl md:text-8xl">
               Good morning, baker.
             </h1>
           </div>
@@ -170,7 +170,7 @@ export default function Admin() {
               </p>
               <h2 className="mt-1 font-serif text-3xl">Your bakes</h2>
             </div>
-            <label className="flex min-w-64 items-center gap-3 border-b border-[#2b241e]/30 py-2 text-sm">
+            <label className="flex w-full max-w-md min-w-0 items-center gap-3 border-b border-[#2b241e]/30 py-2 text-sm">
               <span className="text-base opacity-50">⌕</span>
               <input
                 value={query}

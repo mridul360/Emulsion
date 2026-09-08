@@ -36,7 +36,7 @@ export default function ProductDetails() {
         <p className="mt-12 text-[10px] font-bold uppercase tracking-[0.2em] text-[#c96f4a]">
           {product.category} / {product.tag}
         </p>
-        <h1 className="mt-4 font-serif text-6xl leading-[0.92] tracking-tight">
+        <h1 className="mt-4 font-serif text-5xl leading-[0.94] tracking-tight sm:text-6xl">
           {product.name}
         </h1>
         <p className="mt-6 font-serif text-2xl">{formatPrice(product.price)}</p>

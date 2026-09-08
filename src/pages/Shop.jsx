@@ -21,7 +21,7 @@ export default function Shop() {
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#c96f4a]">
           Celebration bakery
         </p>
-        <h1 className="mt-3 font-serif text-6xl tracking-tighter md:text-8xl">
+        <h1 className="mt-3 font-serif text-5xl tracking-tighter sm:text-6xl md:text-8xl">
           Made for your big moments.
         </h1>
         <p className="mt-5 max-w-md text-sm leading-6 opacity-65">

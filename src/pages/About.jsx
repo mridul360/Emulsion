@@ -6,7 +6,7 @@ export default function About() {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#c96f4a]">
             Our story
           </p>
-          <h1 className="mt-4 font-serif text-6xl leading-[0.9] tracking-tighter md:text-8xl">
+          <h1 className="mt-4 font-serif text-5xl leading-[0.94] tracking-tighter sm:text-6xl md:text-8xl">
             Baked for the <em>in-between</em> moments.
           </h1>
         </div>

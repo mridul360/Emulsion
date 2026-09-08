@@ -8,12 +8,12 @@ export default function Navbar() {
     <header className="relative overflow-hidden border-b border-[#6b4637]/20 bg-[#f8e6d9]/95 text-[#3e2a22] shadow-[0_4px_18px_rgba(62,42,34,0.08)] backdrop-blur-sm">
       <div className="pointer-events-none absolute -left-5 -top-12 h-24 w-44 rounded-br-[70%] rounded-bl-[45%] bg-[#b05e4d]/80" />
       <div className="pointer-events-none absolute right-1/3 top-0 h-7 w-20 rotate-12 border-b border-dashed border-[#3e2a22]/50 opacity-70" />
-      <div className="relative mx-auto flex max-w-350 items-center justify-between gap-6 px-5 py-4 md:px-10">
+      <div className="relative mx-auto flex max-w-350 items-center justify-between gap-3 px-4 py-3 sm:gap-6 sm:px-5 sm:py-4 md:px-10">
         <Link
           to="/"
-          className="flex shrink-0 items-center gap-2 font-serif text-xl font-bold tracking-[-0.04em] md:text-2xl"
+          className="flex shrink-0 items-center gap-2 font-serif text-lg font-bold tracking-[-0.04em] sm:text-xl md:text-2xl"
         >
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#a75d4c] text-sm text-[#f8e6d9]">
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#a75d4c] text-xs text-[#f8e6d9] sm:h-7 sm:w-7 sm:text-sm">
             e
           </span>
           emulsion
@@ -50,7 +50,7 @@ export default function Navbar() {
           aria-label={`Shopping cart with ${count} items`}
           title="Shopping cart"
           className={({ isActive }) =>
-            `flex shrink-0 items-center gap-2 rounded-full border px-3 py-2 text-[10px] font-semibold tracking-[0.08em] transition ${isActive ? "border-[#a75d4c] bg-[#a75d4c] text-[#fff8f1]" : "border-[#6b4637]/40 hover:border-[#a75d4c] hover:text-[#a75d4c]"}`
+            `flex shrink-0 items-center gap-2 rounded-full border px-2.5 py-2 text-[10px] font-semibold tracking-[0.08em] transition sm:px-3 ${isActive ? "border-[#a75d4c] bg-[#a75d4c] text-[#fff8f1]" : "border-[#6b4637]/40 hover:border-[#a75d4c] hover:text-[#a75d4c]"}`
           }
         >
           <span aria-hidden="true" className="text-lg leading-none">

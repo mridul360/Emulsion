@@ -13,7 +13,7 @@ export default function Home() {
             Emulsion bakery / Est. 2020
           </p>
           <div>
-            <h1 className="max-w-xl font-serif text-6xl leading-[0.88] tracking-tighter md:text-8xl">
+            <h1 className="max-w-xl font-serif text-5xl leading-[0.9] tracking-tighter sm:text-6xl md:text-8xl">
               Good bread, <em>good days.</em>
             </h1>
             <p className="mt-7 max-w-sm text-sm leading-6 text-[#fff7ed]/75">
@@ -28,7 +28,7 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <div className="relative min-h-132.5 overflow-hidden bg-[#d5ad8e] md:min-h-160">
+        <div className="relative min-h-112 overflow-hidden bg-[#d5ad8e] md:min-h-160">
           <img
             src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1200&q=85"
             alt="Fresh rustic bread loaves"
@@ -45,7 +45,7 @@ export default function Home() {
             01 / The counter
           </p>
           <div className="mt-3 flex flex-col justify-between gap-5 md:flex-row md:items-end">
-            <h2 className="font-serif text-5xl tracking-tight">
+            <h2 className="font-serif text-4xl tracking-tight sm:text-5xl">
               Today’s favorites
             </h2>
             <Link
@@ -68,7 +68,7 @@ export default function Home() {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#c96f4a]">
             03 / Made properly
           </p>
-          <h2 className="mt-5 max-w-md font-serif text-5xl leading-[0.94] tracking-tighter md:text-7xl">
+          <h2 className="mt-5 max-w-md font-serif text-4xl leading-[0.98] tracking-tighter sm:text-5xl md:text-7xl">
             The long way is the <em>right</em> way.
           </h2>
           <p className="mt-7 max-w-sm text-sm leading-6 opacity-70">

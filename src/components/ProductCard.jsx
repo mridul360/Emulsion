@@ -19,8 +19,8 @@ export default function ProductCard({ product }) {
           {product.tag}
         </span>
       </Link>
-      <div className="flex items-start justify-between gap-3 pt-4">
-        <div>
+      <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
           <Link
             to={`/product/${product.id}`}
             className="font-serif text-lg tracking-[-0.02em] hover:text-[#c96f4a] md:text-xl"
@@ -35,7 +35,7 @@ export default function ProductCard({ product }) {
           onClick={() => add(product)}
           aria-label={`Add ${product.name} to cart`}
           title="Add to cart"
-          className="group/cart flex shrink-0 items-center gap-2 rounded-full border border-[#285447] bg-[#285447] px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-[#fff7ed] transition hover:border-[#c96f4a] hover:bg-[#c96f4a]"
+          className="group/cart flex w-fit shrink-0 items-center gap-2 rounded-full border border-[#285447] bg-[#285447] px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-[#fff7ed] transition hover:border-[#c96f4a] hover:bg-[#c96f4a]"
         >
           <svg
             aria-hidden="true"

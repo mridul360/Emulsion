@@ -48,7 +48,7 @@ export default function Cart() {
           </p>
           <Link
             to="/shop"
-            className="mt-8 inline-flex bg-[#2b241e] px-6 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-white transition hover:bg-[#c96f4a]"
+            className="mt-8 inline-flex bg-[#ffc18b] px-6 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-white transition hover:bg-[#fffcfc]"
           >
             Browse the occasions ↗
           </Link>

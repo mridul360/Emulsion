@@ -1,6 +1,5 @@
 import { Link, useParams } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
-import { openWhatsApp } from "../lib/whatsapp";
 import { useProducts } from "../hooks/useProducts";
 import { formatPrice } from "../lib/currency";
 
@@ -51,12 +50,7 @@ export default function ProductDetails() {
           >
             Add to order
           </button>
-          <button
-            onClick={() => openWhatsApp([{ ...product, quantity: 1 }])}
-            className="border border-[#2b241e]/30 px-6 py-4 text-[10px] font-bold uppercase tracking-[0.18em] hover:border-[#c96f4a] hover:text-[#c96f4a]"
-          >
-            Buy now on WhatsApp ↗
-          </button>
+          
         </div>
       </div>
     </main>

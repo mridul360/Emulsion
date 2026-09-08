@@ -56,7 +56,7 @@ export default function Navbar() {
           <span aria-hidden="true" className="text-lg leading-none">
             🛍
           </span>
-          <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-[#3e2a22] px-1 py-1  text-[9px] text-[#f8e6d9]">
+          <span className="flex h-4 text-center min-w-4 items-center justify-center rounded-full  text-[13px] text-[#000000]">
             {count}
           </span>
         </NavLink>

@@ -12,10 +12,9 @@ const emptyProduct = {
 };
 
 export default function Admin() {
-  const { products, categories, addProduct, addCategory, removeProduct } = useProducts();
+  const { products, categories, addProduct, addCategory, removeProduct, updateProductAvailability } = useProducts();
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All celebrations");
-  const [stock, setStock] = useState({});
   const [newProduct, setNewProduct] = useState(emptyProduct);
   const [savedMessage, setSavedMessage] = useState("");
   const [categoryName, setCategoryName] = useState("");
@@ -35,13 +34,14 @@ export default function Admin() {
     });
   }, [activeCategory, products, query]);
 
-  const availableCount = products.filter((product) => stock[product.id] !== false).length;
+  const availableCount = products.filter((product) => product.available !== false).length;
   const averagePrice = Math.round(
     products.reduce((sum, product) => sum + product.price, 0) / products.length,
   );
 
   function toggleStock(id) {
-    setStock((current) => ({ ...current, [id]: current[id] === false }));
+    const product = products.find((item) => item.id === id);
+    updateProductAvailability(id, product?.available === false);
   }
 
   function updateProduct(event) {
@@ -227,12 +227,12 @@ export default function Admin() {
                     <td className="px-5 py-4 md:px-6">{formatPrice(product.price)}</td>
                     <td className="px-5 py-4 md:px-6">
                       <span
-                        className={`inline-flex items-center gap-2 text-xs ${stock[product.id] !== false ? "text-[#285447]" : "text-[#a75d4c]"}`}
+                        className={`inline-flex items-center gap-2 text-xs ${product.available !== false ? "text-[#285447]" : "text-[#a75d4c]"}`}
                       >
                         <span
-                          className={`h-2 w-2 rounded-full ${stock[product.id] !== false ? "bg-[#4d9a72]" : "bg-[#a75d4c]"}`}
+                          className={`h-2 w-2 rounded-full ${product.available !== false ? "bg-[#4d9a72]" : "bg-[#a75d4c]"}`}
                         />
-                        {stock[product.id] !== false ? "Available" : "Paused"}
+                        {product.available !== false ? "Available" : "Paused"}
                       </span>
                     </td>
                     <td className="px-5 py-4 md:px-6">
@@ -241,7 +241,7 @@ export default function Admin() {
                           onClick={() => toggleStock(product.id)}
                           className="text-[10px] font-bold uppercase tracking-[0.12em] underline underline-offset-4 hover:text-[#c96f4a]"
                         >
-                          {stock[product.id] !== false ? "Pause" : "Make available"}
+                          {product.available !== false ? "Pause" : "Make available"}
                         </button>
                         <button
                           onClick={() => deleteProduct(product)}

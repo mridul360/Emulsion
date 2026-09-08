@@ -28,7 +28,7 @@ export function ProductProvider({ children }) {
   const [categories, setCategories] = useState(loadCategories);
 
   const addProduct = useCallback((product) => {
-    const nextProduct = { ...product, id: Date.now(), price: Number(product.price) };
+    const nextProduct = { ...product, id: Date.now(), price: Number(product.price), available: true };
     setProducts((currentProducts) => {
       const nextProducts = [...currentProducts, nextProduct];
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextProducts));
@@ -56,9 +56,19 @@ export function ProductProvider({ children }) {
     });
   }, []);
 
+  const updateProductAvailability = useCallback((id, available) => {
+    setProducts((currentProducts) => {
+      const nextProducts = currentProducts.map((product) =>
+        product.id === id ? { ...product, available } : product,
+      );
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextProducts));
+      return nextProducts;
+    });
+  }, []);
+
   const value = useMemo(
-    () => ({ products, categories, addProduct, addCategory, removeProduct }),
-    [products, categories, addProduct, addCategory, removeProduct],
+    () => ({ products, categories, addProduct, addCategory, removeProduct, updateProductAvailability }),
+    [products, categories, addProduct, addCategory, removeProduct, updateProductAvailability],
   );
   return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
 }

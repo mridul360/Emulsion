@@ -57,7 +57,7 @@ export default function Home() {
           </div>
         </div>
         <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4">
-          {products.slice(0, 4).map((product) => (
+          {products.filter((product) => product.available !== false).slice(0, 4).map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

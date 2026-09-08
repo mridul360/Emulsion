@@ -13,8 +13,8 @@ export default function Shop() {
   const [activeCategory, setActiveCategory] = useState(initialCategory);
   const visibleProducts =
     activeCategory === "All celebrations"
-      ? products
-      : products.filter((product) => product.category === activeCategory);
+      ? products.filter((product) => product.available !== false)
+      : products.filter((product) => product.category === activeCategory && product.available !== false);
   return (
     <main className="mx-auto max-w-350 px-5 pb-20 md:px-10 md:pb-28">
       <div className="border-t border-[#2b241e]/20 pt-8">

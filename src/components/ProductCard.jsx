@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
+import { formatPrice } from "../lib/currency";
 
 export default function ProductCard({ product }) {
   const { add } = useCart();
@@ -27,7 +28,7 @@ export default function ProductCard({ product }) {
             {product.name}
           </Link>
           <p className="mt-1 text-[10px] uppercase tracking-[0.15em] opacity-50">
-            {product.category} / ${product.price}
+            {product.category} / {formatPrice(product.price)}
           </p>
         </div>
         <button

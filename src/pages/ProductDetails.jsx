@@ -1,10 +1,12 @@
 import { Link, useParams } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
 import { openWhatsApp } from "../lib/whatsapp";
-import { products } from "../data/products";
+import { useProducts } from "../hooks/useProducts";
+import { formatPrice } from "../lib/currency";
 
 export default function ProductDetails() {
   const { productId } = useParams();
+  const { products } = useProducts();
   const product = products.find((item) => item.id === Number(productId));
   const { add } = useCart();
   if (!product)
@@ -17,7 +19,7 @@ export default function ProductDetails() {
       </main>
     );
   return (
-    <main className="mx-auto grid max-w-[1200px] gap-10 px-5 pb-24 pt-5 md:grid-cols-2 md:px-10 md:pt-10">
+    <main className="mx-auto grid max-w-6xl gap-10 px-5 pb-24 pt-5 md:grid-cols-2 md:px-10 md:pt-10">
       <div className="aspect-square overflow-hidden bg-[#eadbc6]">
         <img
           src={product.image}
@@ -35,10 +37,10 @@ export default function ProductDetails() {
         <p className="mt-12 text-[10px] font-bold uppercase tracking-[0.2em] text-[#c96f4a]">
           {product.category} / {product.tag}
         </p>
-        <h1 className="mt-4 font-serif text-6xl leading-[0.92] tracking-[-0.05em]">
+        <h1 className="mt-4 font-serif text-6xl leading-[0.92] tracking-tight">
           {product.name}
         </h1>
-        <p className="mt-6 font-serif text-2xl">${product.price}</p>
+        <p className="mt-6 font-serif text-2xl">{formatPrice(product.price)}</p>
         <p className="mt-7 max-w-md text-sm leading-7 opacity-70">
           {product.description}
         </p>

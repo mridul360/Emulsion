@@ -1,17 +1,19 @@
 import { Link } from "react-router-dom";
+import CelebrationCategories from "../components/CelebrationCategories";
 import ProductCard from "../components/ProductCard";
-import { products } from "../data/products";
+import { useProducts } from "../hooks/useProducts";
 
 export default function Home() {
+  const { products } = useProducts();
   return (
     <main>
-      <section className="mx-auto grid max-w-[1400px] gap-5 px-5 pb-16 md:grid-cols-[1.05fr_0.95fr] md:px-10 md:pb-24">
-        <div className="flex min-h-[530px] flex-col justify-between bg-[#285447] p-7 text-[#fff7ed] md:min-h-[640px] md:p-12">
+      <section className="mx-auto grid max-w-350 gap-5 px-5 pb-16 md:grid-cols-[1.05fr_0.95fr] md:px-10 md:pb-24">
+        <div className="flex min-h-132.5 flex-col justify-between bg-[#285447] p-7 text-[#fff7ed] md:min-h-160 md:p-12">
           <p className="text-[10px] font-bold uppercase tracking-[0.22em]">
             Emulsion bakery / Est. 2020
           </p>
           <div>
-            <h1 className="max-w-xl font-serif text-6xl leading-[0.88] tracking-[-0.05em] md:text-8xl">
+            <h1 className="max-w-xl font-serif text-6xl leading-[0.88] tracking-tighter md:text-8xl">
               Good bread, <em>good days.</em>
             </h1>
             <p className="mt-7 max-w-sm text-sm leading-6 text-[#fff7ed]/75">
@@ -26,7 +28,7 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <div className="relative min-h-[530px] overflow-hidden bg-[#d5ad8e] md:min-h-[640px]">
+        <div className="relative min-h-132.5 overflow-hidden bg-[#d5ad8e] md:min-h-160">
           <img
             src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1200&q=85"
             alt="Fresh rustic bread loaves"
@@ -37,13 +39,13 @@ export default function Home() {
           </p>
         </div>
       </section>
-      <section className="mx-auto max-w-[1400px] px-5 pb-20 md:px-10 md:pb-28">
+      <section className="mx-auto max-w-350 px-5 pb-20 md:px-10 md:pb-28">
         <div className="border-t border-[#2b241e]/20 pt-5">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#c96f4a]">
             01 / The counter
           </p>
           <div className="mt-3 flex flex-col justify-between gap-5 md:flex-row md:items-end">
-            <h2 className="font-serif text-5xl tracking-[-0.04em]">
+            <h2 className="font-serif text-5xl tracking-tight">
               Today’s favorites
             </h2>
             <Link
@@ -60,12 +62,13 @@ export default function Home() {
           ))}
         </div>
       </section>
+      <CelebrationCategories />
       <section className="grid bg-[#eadbc6] md:grid-cols-2">
         <div className="flex flex-col justify-center p-8 md:p-20">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#c96f4a]">
-            02 / Made properly
+            03 / Made properly
           </p>
-          <h2 className="mt-5 max-w-md font-serif text-5xl leading-[0.94] tracking-[-0.05em] md:text-7xl">
+          <h2 className="mt-5 max-w-md font-serif text-5xl leading-[0.94] tracking-tighter md:text-7xl">
             The long way is the <em>right</em> way.
           </h2>
           <p className="mt-7 max-w-sm text-sm leading-6 opacity-70">
@@ -80,7 +83,7 @@ export default function Home() {
           </Link>
         </div>
         <img
-          className="h-[420px] w-full object-cover md:h-[560px]"
+          className="h-105 w-full object-cover md:h-140"
           src="https://images.unsplash.com/photo-1517433670267-08bbd4be890f?auto=format&fit=crop&w=1200&q=85"
           alt="Baker preparing fresh dough"
         />

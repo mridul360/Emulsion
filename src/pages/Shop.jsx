@@ -1,9 +1,16 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
-import { categories, products } from "../data/products";
+import { useProducts } from "../hooks/useProducts";
 
 export default function Shop() {
-  const [activeCategory, setActiveCategory] = useState("All celebrations");
+  const [searchParams] = useSearchParams();
+  const { products, categories } = useProducts();
+  const requestedCategory = searchParams.get("category");
+  const initialCategory = categories.includes(requestedCategory)
+    ? requestedCategory
+    : "All celebrations";
+  const [activeCategory, setActiveCategory] = useState(initialCategory);
   const visibleProducts =
     activeCategory === "All celebrations"
       ? products

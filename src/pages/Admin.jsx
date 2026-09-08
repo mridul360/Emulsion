@@ -1,0 +1,289 @@
+import { useMemo, useState } from "react";
+import { useProducts } from "../hooks/useProducts";
+import { formatPrice } from "../lib/currency";
+
+const emptyProduct = {
+  name: "",
+  category: "Birthday",
+  price: "",
+  description: "",
+  image: "",
+  tag: "New today",
+};
+
+export default function Admin() {
+  const { products, categories, addProduct, addCategory, removeProduct } = useProducts();
+  const [query, setQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All celebrations");
+  const [stock, setStock] = useState({});
+  const [newProduct, setNewProduct] = useState(emptyProduct);
+  const [savedMessage, setSavedMessage] = useState("");
+  const [categoryName, setCategoryName] = useState("");
+
+  const filteredProducts = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    return products.filter((product) => {
+      const matchesCategory =
+        activeCategory === "All celebrations" ||
+        product.category === activeCategory;
+      const matchesQuery =
+        !normalizedQuery ||
+        `${product.name} ${product.category}`
+          .toLowerCase()
+          .includes(normalizedQuery);
+      return matchesCategory && matchesQuery;
+    });
+  }, [activeCategory, products, query]);
+
+  const availableCount = products.filter((product) => stock[product.id] !== false).length;
+  const averagePrice = Math.round(
+    products.reduce((sum, product) => sum + product.price, 0) / products.length,
+  );
+
+  function toggleStock(id) {
+    setStock((current) => ({ ...current, [id]: current[id] === false }));
+  }
+
+  function updateProduct(event) {
+    const { name, value } = event.target;
+    setNewProduct((current) => ({ ...current, [name]: value }));
+  }
+
+  function updateProductImage(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => setNewProduct((current) => ({ ...current, image: reader.result }));
+    reader.readAsDataURL(file);
+  }
+
+  function submitProduct(event) {
+    event.preventDefault();
+    addProduct(newProduct);
+    setNewProduct(emptyProduct);
+    setSavedMessage("Product added to the collection");
+    window.setTimeout(() => setSavedMessage(""), 3000);
+  }
+
+  function submitCategory(event) {
+    event.preventDefault();
+    if (addCategory(categoryName)) {
+      setCategoryName("");
+      setSavedMessage("Category created");
+      window.setTimeout(() => setSavedMessage(""), 3000);
+    }
+  }
+
+  function deleteProduct(product) {
+    if (window.confirm(`Delete ${product.name}? This cannot be undone.`)) {
+      removeProduct(product.id);
+      setSavedMessage("Product deleted");
+      window.setTimeout(() => setSavedMessage(""), 3000);
+    }
+  }
+
+  return (
+    <main className="min-h-[calc(100vh-8rem)] bg-[#f1e8dc] px-5 py-8 md:px-10 md:py-12">
+      <div className="mx-auto max-w-350">
+        <div className="flex flex-col justify-between gap-5 border-b border-[#2b241e]/15 pb-8 md:flex-row md:items-end">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#c96f4a]">
+              Emulsion bakery / Admin
+            </p>
+            <h1 className="mt-3 font-serif text-6xl tracking-tight md:text-8xl">
+              Good morning, baker.
+            </h1>
+          </div>
+          <p className="max-w-xs text-sm leading-6 opacity-60">
+            Manage your celebration collection and keep today&apos;s counter
+            ready.
+          </p>
+        </div>
+
+        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <Stat
+            label="Total products"
+            value={products.length}
+            detail="In the collection"
+          />
+          <Stat
+            label="Available now"
+            value={availableCount}
+            detail="Ready to order"
+            accent
+          />
+          <Stat
+            label="Categories"
+            value={categories.length - 1}
+            detail="Celebration types"
+          />
+          <Stat
+            label="Average price"
+            value={formatPrice(averagePrice)}
+            detail="Across all bakes"
+          />
+        </div>
+
+        <section className="mt-10 border border-[#2b241e]/15 bg-[#285447] p-5 text-[#fff7ed] md:p-7">
+          <div className="flex flex-col justify-between gap-3 border-b border-[#fff7ed]/20 pb-5 md:flex-row md:items-end">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#f3c877]">Add to collection</p>
+              <h2 className="mt-1 font-serif text-3xl">Upload a new product</h2>
+            </div>
+            {savedMessage && <p className="text-xs text-[#f3c877]">✓ {savedMessage}</p>}
+          </div>
+          <form onSubmit={submitProduct} className="mt-6 grid gap-5 md:grid-cols-2">
+            <AdminField label="Product name" name="name" value={newProduct.name} onChange={updateProduct} placeholder="e.g. Rose Gold Birthday Cake" />
+            <div>
+              <label htmlFor="category" className="mb-2 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#fff7ed]/75">Category</label>
+              <select id="category" name="category" value={newProduct.category} onChange={updateProduct} className="w-full border-b border-[#fff7ed]/30 bg-transparent py-3 text-sm outline-none">
+                {categories.slice(1).map((category) => <option key={category} value={category} className="text-[#2b241e]">{category}</option>)}
+              </select>
+            </div>
+            <AdminField label="Price (৳)" name="price" type="number" min="0" step="0.01" value={newProduct.price} onChange={updateProduct} placeholder="0.00" />
+            <AdminField label="Product tag" name="tag" value={newProduct.tag} onChange={updateProduct} placeholder="New today" />
+            <div className="md:col-span-2">
+              <label htmlFor="description" className="mb-2 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#fff7ed]/75">Description</label>
+              <textarea id="description" name="description" value={newProduct.description} onChange={updateProduct} required rows="2" placeholder="Describe the product for customers" className="w-full resize-none border-b border-[#fff7ed]/30 bg-transparent py-3 text-sm outline-none placeholder:text-[#fff7ed]/40 focus:border-[#f3c877]" />
+            </div>
+            <AdminField label="Image URL" name="image" type="url" value={newProduct.image.startsWith("data:") ? "" : newProduct.image} onChange={updateProduct} placeholder="https://..." />
+            <div>
+              <label htmlFor="image-file" className="mb-2 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#fff7ed]/75">Or upload image</label>
+              <input id="image-file" type="file" accept="image/*" onChange={updateProductImage} className="w-full py-2 text-xs text-[#fff7ed]/70 file:mr-3 file:border-0 file:bg-[#f3c877] file:px-3 file:py-2 file:text-[10px] file:font-bold file:uppercase file:text-[#285447]" />
+            </div>
+            <div className="flex items-end md:col-span-2"><button type="submit" className="bg-[#f3c877] px-6 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-[#285447] transition hover:bg-[#fff7ed]">Add product ↗</button></div>
+          </form>
+          <form onSubmit={submitCategory} className="mt-8 flex flex-col gap-3 border-t border-[#fff7ed]/20 pt-6 sm:flex-row sm:items-end">
+            <div className="flex-1">
+              <label htmlFor="new-category" className="mb-2 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#fff7ed]/75">Create new category</label>
+              <input id="new-category" value={categoryName} onChange={(event) => setCategoryName(event.target.value)} required placeholder="e.g. Baby shower" className="w-full border-b border-[#fff7ed]/30 bg-transparent py-3 text-sm outline-none placeholder:text-[#fff7ed]/40 focus:border-[#f3c877]" />
+            </div>
+            <button type="submit" className="bg-[#fff7ed] px-5 py-3 text-[10px] font-bold uppercase tracking-[0.16em] text-[#285447] transition hover:bg-[#f3c877]">Create category +</button>
+          </form>
+        </section>
+
+        <section className="mt-10 overflow-hidden border border-[#2b241e]/15 bg-[#f8f3ed]">
+          <div className="flex flex-col gap-4 border-b border-[#2b241e]/15 p-5 md:flex-row md:items-center md:justify-between md:p-6">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#c96f4a]">
+                Product catalogue
+              </p>
+              <h2 className="mt-1 font-serif text-3xl">Your bakes</h2>
+            </div>
+            <label className="flex min-w-64 items-center gap-3 border-b border-[#2b241e]/30 py-2 text-sm">
+              <span className="text-base opacity-50">⌕</span>
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search products"
+                aria-label="Search products"
+                className="w-full bg-transparent outline-none placeholder:opacity-40"
+              />
+            </label>
+          </div>
+          <div className="flex gap-5 overflow-x-auto border-b border-[#2b241e]/15 px-5 pt-4 text-[10px] font-bold uppercase tracking-[0.15em] md:px-6">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setActiveCategory(category)}
+                className={`whitespace-nowrap border-b-2 pb-4 transition ${activeCategory === category ? "border-[#c96f4a] text-[#c96f4a]" : "border-transparent opacity-50 hover:opacity-100"}`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-170 text-left text-sm">
+              <thead className="bg-[#eadbc6]/45 text-[10px] uppercase tracking-[0.15em] opacity-60">
+                <tr>
+                  <th className="px-5 py-4 font-bold md:px-6">Product</th>
+                  <th className="px-5 py-4 font-bold md:px-6">Category</th>
+                  <th className="px-5 py-4 font-bold md:px-6">Price</th>
+                  <th className="px-5 py-4 font-bold md:px-6">Status</th>
+                  <th className="px-5 py-4 font-bold md:px-6">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#2b241e]/10">
+                {filteredProducts.map((product) => (
+                  <tr
+                    key={product.id}
+                    className="transition hover:bg-[#eadbc6]/25"
+                  >
+                    <td className="px-5 py-4 md:px-6">
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={product.image}
+                          alt=""
+                          className="h-12 w-12 object-cover"
+                        />
+                        <span className="font-serif text-lg">
+                          {product.name}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-5 py-4 text-xs uppercase tracking-[0.12em] opacity-60 md:px-6">
+                      {product.category}
+                    </td>
+                    <td className="px-5 py-4 md:px-6">{formatPrice(product.price)}</td>
+                    <td className="px-5 py-4 md:px-6">
+                      <span
+                        className={`inline-flex items-center gap-2 text-xs ${stock[product.id] !== false ? "text-[#285447]" : "text-[#a75d4c]"}`}
+                      >
+                        <span
+                          className={`h-2 w-2 rounded-full ${stock[product.id] !== false ? "bg-[#4d9a72]" : "bg-[#a75d4c]"}`}
+                        />
+                        {stock[product.id] !== false ? "Available" : "Paused"}
+                      </span>
+                    </td>
+                    <td className="px-5 py-4 md:px-6">
+                      <div className="flex items-center gap-4">
+                        <button
+                          onClick={() => toggleStock(product.id)}
+                          className="text-[10px] font-bold uppercase tracking-[0.12em] underline underline-offset-4 hover:text-[#c96f4a]"
+                        >
+                          {stock[product.id] !== false ? "Pause" : "Make available"}
+                        </button>
+                        <button
+                          onClick={() => deleteProduct(product)}
+                          className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#a75d4c] underline underline-offset-4 hover:text-[#7e352d]"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {filteredProducts.length === 0 && (
+              <div className="px-6 py-16 text-center">
+                <p className="font-serif text-2xl">No products found.</p>
+                <p className="mt-2 text-sm opacity-60">
+                  Try another search or category.
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
+    </main>
+  );
+}
+
+function AdminField({ label, name, type = "text", value, onChange, placeholder, min, step }) {
+  return <div><label htmlFor={name} className="mb-2 block text-[10px] font-bold uppercase tracking-[0.16em] text-[#fff7ed]/75">{label}</label><input id={name} name={name} type={type} value={value} onChange={onChange} placeholder={placeholder} min={min} step={step} required className="w-full border-b border-[#fff7ed]/30 bg-transparent py-3 text-sm outline-none placeholder:text-[#fff7ed]/40 focus:border-[#f3c877]" /></div>;
+}
+
+function Stat({ label, value, detail, accent = false }) {
+  return (
+    <div
+      className={`border p-5 ${accent ? "border-[#c96f4a]/40 bg-[#eadbc6]" : "border-[#2b241e]/15 bg-[#f8f3ed]"}`}
+    >
+      <p className="text-[10px] font-bold uppercase tracking-[0.16em] opacity-55">
+        {label}
+      </p>
+      <p className="mt-4 font-serif text-4xl">{value}</p>
+      <p className="mt-1 text-xs opacity-50">{detail}</p>
+    </div>
+  );
+}

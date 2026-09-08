@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function NotFound() {
   return (
-    <main className="mx-auto max-w-[900px] px-5 py-32 text-center">
+    <main className="mx-auto max-w-lg px-5 py-32 text-center">
       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#c96f4a]">
         404 / Gone from the oven
       </p>

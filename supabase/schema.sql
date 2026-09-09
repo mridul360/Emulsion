@@ -43,15 +43,19 @@ drop policy if exists "Public can read categories" on public.categories;
 drop policy if exists "Public can manage categories" on public.categories;
 drop policy if exists "Public can read products" on public.products;
 drop policy if exists "Public can manage products" on public.products;
+drop policy if exists "Authenticated can manage categories" on public.categories;
+drop policy if exists "Authenticated can manage products" on public.products;
 
 create policy "Public can read categories"
   on public.categories for select using (true);
 
-create policy "Public can manage categories"
-  on public.categories for all using (true) with check (true);
+create policy "Authenticated can manage categories"
+  on public.categories for all to authenticated
+  using (true) with check (true);
 
 create policy "Public can read products"
   on public.products for select using (true);
 
-create policy "Public can manage products"
-  on public.products for all using (true) with check (true);
+create policy "Authenticated can manage products"
+  on public.products for all to authenticated
+  using (true) with check (true);

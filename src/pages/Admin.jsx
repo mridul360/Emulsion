@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useProducts } from "../hooks/useProducts";
 import { formatPrice } from "../lib/currency";
-import { hasSupabaseConfig } from "../lib/supabase";
+import { hasSupabaseConfig, supabase } from "../lib/supabase";
 
 const emptyProduct = {
   name: "",
@@ -12,14 +12,9 @@ const emptyProduct = {
   tag: "New today",
 };
 
-const ADMIN_ID = "01614326888";
-const ADMIN_PASSWORD = "admin";
-const ADMIN_SESSION_KEY = "emulsion-admin-session";
-
 export default function Admin() {
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    () => window.sessionStorage.getItem(ADMIN_SESSION_KEY) === "true",
-  );
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(hasSupabaseConfig);
   const {
     products,
     categories,
@@ -39,26 +34,41 @@ export default function Admin() {
   const [loginDetails, setLoginDetails] = useState({ id: "", password: "" });
   const [loginError, setLoginError] = useState("");
 
-  function submitLogin(event) {
+  useEffect(() => {
+    if (!hasSupabaseConfig) return undefined;
+
+    supabase.auth.getSession().then(({ data }) => {
+      setIsAuthenticated(Boolean(data.session));
+      setAuthLoading(false);
+    });
+
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(Boolean(session));
+      setAuthLoading(false);
+    });
+
+    return () => data.subscription.unsubscribe();
+  });
+
+  async function submitLogin(event) {
     event.preventDefault();
-    if (
-      loginDetails.id.trim() === ADMIN_ID &&
-      loginDetails.password.trim() === ADMIN_PASSWORD
-    ) {
-      window.sessionStorage.setItem(ADMIN_SESSION_KEY, "true");
-      setIsAuthenticated(true);
-      setLoginError("");
+    if (!hasSupabaseConfig) {
+      setLoginError("Supabase is not configured for this deployment.");
       return;
     }
-    setLoginError("Incorrect admin ID or password.");
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: loginDetails.id.trim(),
+      password: loginDetails.password,
+    });
+    setLoginError(error ? "Incorrect admin email or password." : "");
   }
 
-  function logout() {
-    window.sessionStorage.removeItem(ADMIN_SESSION_KEY);
-    setIsAuthenticated(false);
+  async function logout() {
+    await supabase.auth.signOut();
   }
 
-  if (!isAuthenticated) {
+  if (authLoading || !isAuthenticated) {
     return (
       <AdminLogin
         details={loginDetails}
@@ -235,7 +245,9 @@ export default function Admin() {
           {!hasSupabaseConfig
             ? "Local mode: add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env, then restart the dev server. Changes are currently saved only in this browser."
             : databaseError
-              ? `Database error: ${databaseError}. Run supabase/schema.sql in Supabase SQL Editor.`
+              ? databaseError.toLowerCase().includes("secret api key")
+                ? "Database error: Vercel is using a Supabase secret key in the browser. Set VITE_SUPABASE_ANON_KEY to your sb_publishable_ key, then redeploy."
+                : `Database error: ${databaseError}. Run supabase/schema.sql in Supabase SQL Editor.`
               : "Database connected: changes are shared across devices."}
         </div>
 
@@ -576,7 +588,7 @@ function AdminLogin({ details, setDetails, error, onSubmit }) {
               htmlFor="admin-id"
               className="mb-2 block text-[10px] font-bold uppercase tracking-[0.16em]"
             >
-              Admin ID
+              Admin email
             </label>
             <input
               id="admin-id"

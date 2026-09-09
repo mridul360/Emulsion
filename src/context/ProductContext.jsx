@@ -31,6 +31,7 @@ export function ProductProvider({ children }) {
   const [categories, setCategories] = useState(
     hasSupabaseConfig ? initialCategories : loadCategoriesFromStorage,
   );
+  const [databaseError, setDatabaseError] = useState("");
 
   useEffect(() => {
     if (!hasSupabaseConfig) return;
@@ -43,6 +44,7 @@ export function ProductProvider({ children }) {
 
       if (productsResult.error) {
         console.error("Unable to load products from Supabase", productsResult.error);
+        setDatabaseError(productsResult.error.message);
       } else if (productsResult.data.length > 0) {
         setProducts(productsResult.data);
       } else {
@@ -51,6 +53,7 @@ export function ProductProvider({ children }) {
 
       if (categoriesResult.error) {
         console.error("Unable to load categories from Supabase", categoriesResult.error);
+        setDatabaseError(categoriesResult.error.message);
       } else {
         setCategories(["All celebrations", ...categoriesResult.data.map((item) => item.name)]);
       }
@@ -182,8 +185,8 @@ export function ProductProvider({ children }) {
   }, []);
 
   const value = useMemo(
-    () => ({ products, categories, addProduct, updateProduct, addCategory, removeProduct, updateProductAvailability }),
-    [products, categories, addProduct, updateProduct, addCategory, removeProduct, updateProductAvailability],
+    () => ({ products, categories, databaseError, addProduct, updateProduct, addCategory, removeProduct, updateProductAvailability }),
+    [products, categories, databaseError, addProduct, updateProduct, addCategory, removeProduct, updateProductAvailability],
   );
   return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
 }

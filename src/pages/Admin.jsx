@@ -23,6 +23,7 @@ export default function Admin() {
   const {
     products,
     categories,
+    databaseError,
     addProduct,
     updateProduct: saveProduct,
     addCategory,
@@ -228,12 +229,14 @@ export default function Admin() {
         </div>
 
         <div
-          className={`mt-5 border px-4 py-3 text-xs ${hasSupabaseConfig ? "border-[#4d9a72]/40 bg-[#e5f1e8] text-[#285447]" : "border-[#a75d4c]/40 bg-[#f8e1d8] text-[#7e352d]"}`}
+          className={`mt-5 border px-4 py-3 text-xs ${!hasSupabaseConfig || databaseError ? "border-[#a75d4c]/40 bg-[#f8e1d8] text-[#7e352d]" : "border-[#4d9a72]/40 bg-[#e5f1e8] text-[#285447]"}`}
           role="status"
         >
-          {hasSupabaseConfig
-            ? "Database connected: changes are shared across devices."
-            : "Local mode: add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env, then restart the dev server. Changes are currently saved only in this browser."}
+          {!hasSupabaseConfig
+            ? "Local mode: add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env, then restart the dev server. Changes are currently saved only in this browser."
+            : databaseError
+              ? `Database error: ${databaseError}. Run supabase/schema.sql in Supabase SQL Editor.`
+              : "Database connected: changes are shared across devices."}
         </div>
 
         <section className="mt-10 border border-[#2b241e]/15 bg-[#285447] p-5 text-[#fff7ed] md:p-7">

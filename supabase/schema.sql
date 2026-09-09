@@ -23,6 +23,11 @@ on conflict (name) do nothing;
 alter table public.categories enable row level security;
 alter table public.products enable row level security;
 
+drop policy if exists "Public can read categories" on public.categories;
+drop policy if exists "Public can manage categories" on public.categories;
+drop policy if exists "Public can read products" on public.products;
+drop policy if exists "Public can manage products" on public.products;
+
 create policy "Public can read categories"
   on public.categories for select using (true);
 

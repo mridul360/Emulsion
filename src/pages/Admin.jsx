@@ -23,6 +23,7 @@ export default function Admin() {
     products,
     categories,
     addProduct,
+    updateProduct: saveProduct,
     addCategory,
     removeProduct,
     updateProductAvailability,
@@ -30,6 +31,7 @@ export default function Admin() {
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All celebrations");
   const [newProduct, setNewProduct] = useState(emptyProduct);
+  const [editingProductId, setEditingProductId] = useState(null);
   const [savedMessage, setSavedMessage] = useState("");
   const [categoryName, setCategoryName] = useState("");
   const [loginDetails, setLoginDetails] = useState({ id: "", password: "" });
@@ -85,9 +87,14 @@ export default function Admin() {
     products.reduce((sum, product) => sum + product.price, 0) / products.length,
   );
 
-  function toggleStock(id) {
+  async function toggleStock(id) {
     const product = products.find((item) => item.id === id);
-    updateProductAvailability(id, product?.available === false);
+    try {
+      await updateProductAvailability(id, product?.available === false);
+    } catch (error) {
+      console.error("Unable to update product availability", error);
+      setSavedMessage("Could not update product availability");
+    }
   }
 
   function updateProduct(event) {
@@ -104,27 +111,66 @@ export default function Admin() {
     reader.readAsDataURL(file);
   }
 
-  function submitProduct(event) {
+  async function submitProduct(event) {
     event.preventDefault();
-    addProduct(newProduct);
-    setNewProduct(emptyProduct);
-    setSavedMessage("Product added to the collection");
+    try {
+      if (editingProductId === null) {
+        await addProduct(newProduct);
+        setSavedMessage("Product added to the collection");
+      } else {
+        await saveProduct(editingProductId, newProduct);
+        setSavedMessage("Product updated");
+      }
+      setNewProduct(emptyProduct);
+      setEditingProductId(null);
+    } catch (error) {
+      console.error("Unable to save product", error);
+      setSavedMessage("Could not save product");
+    }
     window.setTimeout(() => setSavedMessage(""), 3000);
   }
 
-  function submitCategory(event) {
-    event.preventDefault();
-    if (addCategory(categoryName)) {
-      setCategoryName("");
-      setSavedMessage("Category created");
-      window.setTimeout(() => setSavedMessage(""), 3000);
-    }
+  function editProduct(product) {
+    setNewProduct({
+      name: product.name,
+      category: product.category,
+      price: String(product.price),
+      description: product.description,
+      image: product.image,
+      tag: product.tag,
+    });
+    setEditingProductId(product.id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function deleteProduct(product) {
+  function cancelEdit() {
+    setNewProduct(emptyProduct);
+    setEditingProductId(null);
+  }
+
+  async function submitCategory(event) {
+    event.preventDefault();
+    try {
+      if (await addCategory(categoryName)) {
+      setCategoryName("");
+      setSavedMessage("Category created");
+      }
+    } catch (error) {
+      console.error("Unable to create category", error);
+      setSavedMessage("Could not create category");
+    }
+    window.setTimeout(() => setSavedMessage(""), 3000);
+  }
+
+  async function deleteProduct(product) {
     if (window.confirm(`Delete ${product.name}? This cannot be undone.`)) {
-      removeProduct(product.id);
-      setSavedMessage("Product deleted");
+      try {
+        await removeProduct(product.id);
+        setSavedMessage("Product deleted");
+      } catch (error) {
+        console.error("Unable to delete product", error);
+        setSavedMessage("Could not delete product");
+      }
       window.setTimeout(() => setSavedMessage(""), 3000);
     }
   }
@@ -186,7 +232,9 @@ export default function Admin() {
               <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#f3c877]">
                 Add to collection
               </p>
-              <h2 className="mt-1 font-serif text-3xl">Upload a new product</h2>
+              <h2 className="mt-1 font-serif text-3xl">
+                {editingProductId === null ? "Upload a new product" : "Edit product"}
+              </h2>
             </div>
             {savedMessage && (
               <p className="text-xs text-[#f3c877]">✓ {savedMessage}</p>
@@ -289,12 +337,23 @@ export default function Admin() {
               />
             </div>
             <div className="flex items-end md:col-span-2">
-              <button
-                type="submit"
-                className="bg-[#f3c877] px-6 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-[#285447] transition hover:bg-[#fff7ed]"
-              >
-                Add product ↗
-              </button>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="submit"
+                  className="bg-[#f3c877] px-6 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-[#285447] transition hover:bg-[#fff7ed]"
+                >
+                  {editingProductId === null ? "Add product ↗" : "Save changes ↗"}
+                </button>
+                {editingProductId !== null && (
+                  <button
+                    type="button"
+                    onClick={cancelEdit}
+                    className="border border-[#fff7ed]/40 px-6 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-[#fff7ed] transition hover:border-[#fff7ed]"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
             </div>
           </form>
           <form
@@ -403,6 +462,12 @@ export default function Admin() {
                     </td>
                     <td className="px-5 py-4 md:px-6">
                       <div className="flex items-center gap-4">
+                        <button
+                          onClick={() => editProduct(product)}
+                          className="text-[10px] font-bold uppercase tracking-[0.12em] underline underline-offset-4 hover:text-[#c96f4a]"
+                        >
+                          Edit
+                        </button>
                         <button
                           onClick={() => toggleStock(product.id)}
                           className="text-[10px] font-bold uppercase tracking-[0.12em] underline underline-offset-4 hover:text-[#c96f4a]"

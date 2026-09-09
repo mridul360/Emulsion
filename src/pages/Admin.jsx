@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useProducts } from "../hooks/useProducts";
 import { formatPrice } from "../lib/currency";
+import { hasSupabaseConfig } from "../lib/supabase";
 
 const emptyProduct = {
   name: "",
@@ -224,6 +225,15 @@ export default function Admin() {
             value={formatPrice(averagePrice)}
             detail="Across all bakes"
           />
+        </div>
+
+        <div
+          className={`mt-5 border px-4 py-3 text-xs ${hasSupabaseConfig ? "border-[#4d9a72]/40 bg-[#e5f1e8] text-[#285447]" : "border-[#a75d4c]/40 bg-[#f8e1d8] text-[#7e352d]"}`}
+          role="status"
+        >
+          {hasSupabaseConfig
+            ? "Database connected: changes are shared across devices."
+            : "Local mode: add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env, then restart the dev server. Changes are currently saved only in this browser."}
         </div>
 
         <section className="mt-10 border border-[#2b241e]/15 bg-[#285447] p-5 text-[#fff7ed] md:p-7">

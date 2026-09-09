@@ -20,6 +20,22 @@ insert into public.categories (name)
 values ('Birthday'), ('Anniversary'), ('Marriage'), ('Holud'), ('Gifts')
 on conflict (name) do nothing;
 
+insert into public.products (id, name, category, price, description, image, tag)
+values
+  (1, 'Classic Birthday Cake', 'Birthday', 12, 'A deeply caramelized crust, open crumb, and a gentle tang from our 24-hour natural starter.', 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1000&q=85', 'Bestseller'),
+  (2, 'Pistachio Holud Cake', 'Holud', 7, 'Flaky laminated pastry rolled with pistachio frangipane and citrus glaze.', 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=1000&q=85', 'New today'),
+  (3, 'Strawberry Anniversary Cake', 'Anniversary', 48, 'A buttery shell filled with vanilla bean cream and crowned with ripe berries.', 'https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?auto=format&fit=crop&w=1000&q=85', 'Weekend treat'),
+  (4, 'Chocolate Marriage Treat Box', 'Marriage', 4, 'Dark chocolate, brown butter, and flaky sea salt with a soft center.', 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=1000&q=85', 'Everyday joy'),
+  (5, 'Marriage Dessert Platter', 'Marriage', 10, 'Olive oil-rich focaccia with rosemary and crunchy sea salt.', 'https://images.unsplash.com/photo-1573140401552-3fab0b24306f?auto=format&fit=crop&w=1000&q=85', 'Fresh from oven'),
+  (6, 'Lemon Holud Celebration Cake', 'Holud', 36, 'A tender cake made with extra virgin olive oil and lemon zest sugar.', 'https://images.unsplash.com/photo-1519915028121-7d3463d20b13?auto=format&fit=crop&w=1000&q=85', 'Slow baked')
+on conflict (id) do nothing;
+
+select setval(
+  pg_get_serial_sequence('public.products', 'id'),
+  greatest((select coalesce(max(id), 1) from public.products), 1),
+  true
+);
+
 alter table public.categories enable row level security;
 alter table public.products enable row level security;
 
